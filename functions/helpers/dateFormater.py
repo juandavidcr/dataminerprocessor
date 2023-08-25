@@ -1,7 +1,6 @@
 from datetime import datetime
 
-def convert_to_yyyy_mm_dd(date_string):
-    date_obj = datetime.strptime(date_string, '%Y-%m-%d')
-    return date_obj.date()
-
-#createFecha('2022','05','22')
+def transform_FechaFormat(fecha_str):
+    fecha_obj = datetime.strptime(fecha_str, "%d/%m/%Y")
+    fecha_transformada = fecha_obj.strftime("%Y-%m-%d")
+    return fecha_transformada
