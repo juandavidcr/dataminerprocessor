@@ -45,7 +45,9 @@ CREATE TABLE `Datos_Climatologicos` (
 
 LOCK TABLES `Datos_Climatologicos` WRITE;
 /*!40000 ALTER TABLE `Datos_Climatologicos` DISABLE KEYS */;
-INSERT INTO `Datos_Climatologicos` VALUES (1,'1924-07-19',0.0,NULL,20.0,12.0,NULL,1),(2,'1961-01-01',10.7,1.9,20.0,20.0,NULL,3);
+INSERT INTO `Datos_Climatologicos` VALUES 
+(1,'1924-07-19',0.0,NULL,20.0,12.0,NULL,1),
+(2,'1961-01-01',10.7,1.9,20.0,20.0,NULL,3);
 /*!40000 ALTER TABLE `Datos_Climatologicos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,7 +83,9 @@ CREATE TABLE `Estacion_climatologica` (
 
 LOCK TABLES `Estacion_climatologica` WRITE;
 /*!40000 ALTER TABLE `Estacion_climatologica` DISABLE KEYS */;
-INSERT INTO `Estacion_climatologica` VALUES (1,'30012','ATZALAN','OPERANDO',1,1,'019.789','-097.246','1,697 msnm','2020-04-06'),(2,'30452','COATEPEC','OPERANDO',2,2,'019.508','-096.949','1,349 msnm','2020-04-06');
+INSERT INTO `Estacion_climatologica` VALUES 
+(1,'30012','ATZALAN','OPERANDO',1,1,'019.789','-097.246','1,697 msnm','2020-04-06'),
+(2,'30452','COATEPEC','OPERANDO',2,2,'019.508','-096.949','1,349 msnm','2020-04-06');
 /*!40000 ALTER TABLE `Estacion_climatologica` ENABLE KEYS */;
 UNLOCK TABLES;
 

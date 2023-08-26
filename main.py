@@ -1,11 +1,10 @@
-# import mysql.connector
-
+import mysql.connector
 from functions.script1DataCleanUp import getInfoDataTable,getInfoData,printlineas
 from pexpect import EOF
 
 #Dividir datos por cada estacion metereologica
 
-#Obtener los organismos, municipios y estados llenar catalogos
+#Obtener los organismos, municipios y estados para llenar catalogos
 
 #Obtener todas las estaciones metereologicas
 # midb = mysql.connector.connect(
