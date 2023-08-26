@@ -41,8 +41,7 @@ cursor=midb.cursor()
 #null=None
 #humedadRelativa=None
 #Estado_ID=30
-archivo = open("./1_newfile.txt","r")
-contadorMunicipio = 0
+archivo = open("./newfile.txt","r")
 
 for linea in archivo:
     linea = linea.rstrip("\\n") 
@@ -132,7 +131,7 @@ for linea in archivo:
 #print(listaLat2,listaLon2)
 #print(listaIdorgNum,listaMunId)
 
-print("---------> cleanedMunId: ",MunicipioIdCleaned)
+#print("---------> cleanedMunId: ",MunicipioIdCleaned)
 #print(" lMunID: --------->",listaMunId)
 print("resultado ---> Municipio Nombre: ",resultadoMunNombre)
 print("Numero de Estacion: ",listaEstaciones)
@@ -146,43 +145,26 @@ print("OrgIds Lista:------>",listaIdorgNum)
 
 x=0
 datos_a_insertar = []
-for x in range(15):
+for x in range(numMunicipios):
     datos_a_insertar.append((listaEstaciones[x],listaNombreEstaciones[x],listaSituacion[x],listaMunId[x],listaIdorgNum[x],listaLat[x],listaLon[x],listaAlt[x],listaEmision2[x])) 
-        
-for linea in datos_a_insertar:
+
+
+nombre_archivo = "Stations.sql"
+with open(nombre_archivo, 'w') as archivoSQL:
     lineaSql = f"INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion,situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES"
-    lineaSql+=f"({listaEstaciones[x]},{listaNombreEstaciones[x]},{listaSituacion[x]},{listaMunId[x]},{listaIdorgNum[x]},{listaLat[x]},{listaLon[x]},{listaAlt[x]},{listaEmision2[x]}),)"
-    nombre_archivo = "Stations.sql"
-    with open(nombre_archivo, 'w') as archivo:
-        archivo.write(lineaSql)
-#fileToSql = open("Stations.sql",'w')
-
-
-
-
-
-for tuplastransformadas in datos_a_insertar:
-    print(tuplastransformadas)
-#datos_a_insertar=[
-    # ("valor1", "valor2"),
-    # ("valor3", "valor4"),
-    # # Agrega más tuplas según sea necesario
-# ]
-
-#datos_a_insertar.append()
-# Consulta de inserción con placeholders
-#INSERT INTO climatologia_diaria.Estacion_climatologica (num_estacion, nombre_estacion, situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES ('1', 'a', 'a', '1', '1', '123', '-123', '123', '2023-08-24');
+    archivoSQL.write(lineaSql)
+    for tuplastransformadas in datos_a_insertar:
+        lineaSql=str(tuplastransformadas)
+        archivoSQL.write(lineaSql+", \n")
+        print(lineaSql)
+    archivoSQL.write(";")
+    archivoSQL.close()
 
 consultaInsertEstacionClim = "INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion,situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
 # # Insertar los datos en lotes
 cursor.executemany(consultaInsertEstacionClim, datos_a_insertar)
-midb.commit()
-# #
-#lineaNuevaSQL=f"""INSERT INTO Estacion_climatologica VALUES 
-#(1,'30012','ATZALAN','OPERANDO',1,1,'019.789','-097.246','1,697 msnm','2020-04-06'),
-#(2,'30452','COATEPEC','OPERANDO',2,2,'019.508','-096.949','1,349 msnm','2020-04-06');
-#"""
+#midb.commit()
 
 archivo.close()
 

@@ -1,1 +1,16 @@
-INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion,situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES(30200,ZONGOLICA ,SUSPENDIDA,15,2,018.667°,-097.000°,1,224 msnm,2020-04-06),)
+INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion,situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES('30012', 'ATZALAN ', 'OPERANDO', 1, 1, '019.789°', '-097.246°', '1,697 msnm', '2020-04-06'), 
+('30452', 'BRIONES ', 'OPERANDO', 2, 2, '019.508°', '-096.949°', '1,349 msnm', '2020-04-06'), 
+('30207', 'CHICONTEPEC DE TEJEDA (DGE) ', 'SUSPENDIDA', 3, 2, '020.969°', '-098.168°', '611 msnm', '2020-04-06'), 
+('30026', 'COATEPEC ', 'SUSPENDIDA', 4, 2, '019.456°', '-096.944°', '1,188 msnm', '2020-04-06'), 
+('30330', 'HEROICA CORDOBA (SMN) ', 'SUSPENDIDA', 5, 1, '018.883°', '-096.917°', '803 msnm', '2020-04-06'), 
+('30066', 'HUATUSCO DE CHICUELLAR ', 'SUSPENDIDA', 6, 1, '019.150°', '-096.960°', '1,284 msnm', '2020-04-06'), 
+('30146', 'SAN ANDRES ', 'SUSPENDIDA', 7, 1, '018.447°', '-095.211°', '288 msnm', '2020-04-06'), 
+('30161', 'SANTIAGO TUXTLA ', 'SUSPENDIDA', 8, 2, '018.467°', '-095.300°', '202 msnm', '2020-04-06'), 
+('30302', 'SIHUAPAN ', 'OPERANDO', 9, 2, '018.439°', '-095.178°', '264 msnm', '2020-04-06'), 
+('30170', 'TAPALAPA ', 'SUSPENDIDA', 10, 2, '018.532°', '-095.303°', '290 msnm', '2020-04-06'), 
+('30108', 'MISANTLA ', 'OPERANDO', 11, 1, '019.929°', '-096.856°', '310 msnm', '2020-04-06'), 
+('30125', 'PAPANTLA ', 'OPERANDO', 12, 1, '020.446°', '-097.325°', '190 msnm', '2020-04-06'), 
+('30111', 'MOTZORONGO ', 'SUSPENDIDA', 13, 2, '018.643°', '-096.732°', '268 msnm', '2020-04-06'), 
+('30197', 'VISTA HERMOSA ', 'SUSPENDIDA', 14, 2, '018.664°', '-096.713°', '263 msnm', '2020-04-06'), 
+('30200', 'ZONGOLICA ', 'SUSPENDIDA', 15, 2, '018.667°', '-097.000°', '1,224 msnm', '2020-04-06');
+;
