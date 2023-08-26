@@ -1,0 +1,1 @@
+INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion,situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES(30200,ZONGOLICA ,SUSPENDIDA,15,2,018.667°,-097.000°,1,224 msnm,2020-04-06),)
