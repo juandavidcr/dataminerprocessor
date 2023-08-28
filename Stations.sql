@@ -12,5 +12,5 @@ INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion,situacion, muni
 ('30125', 'PAPANTLA ', 'OPERANDO', 12, 1, '020.446°', '-097.325°', '190 msnm', '2020-04-06'), 
 ('30111', 'MOTZORONGO ', 'SUSPENDIDA', 13, 2, '018.643°', '-096.732°', '268 msnm', '2020-04-06'), 
 ('30197', 'VISTA HERMOSA ', 'SUSPENDIDA', 14, 2, '018.664°', '-096.713°', '263 msnm', '2020-04-06'), 
-('30200', 'ZONGOLICA ', 'SUSPENDIDA', 15, 2, '018.667°', '-097.000°', '1,224 msnm', '2020-04-06');
-;
+('30200', 'ZONGOLICA ', 'SUSPENDIDA', 15, 2, '018.667°', '-097.000°', '1,224 msnm', '2020-04-06'), 
+;;

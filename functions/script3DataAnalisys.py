@@ -3,8 +3,13 @@
 #
 import mysql.connector
 import re
-from helpers.dateFormater import transform_FechaFormat
-from models.Estaciones import Estaciones
+from datetime import datetime
+
+def transform_FechaFormat(fecha_str):
+    #print("transformando fecha")
+    fecha_obj = datetime.strptime(fecha_str, "%d/%m/%Y")
+    fecha_transformada = fecha_obj.strftime("%Y-%m-%d")
+    return fecha_transformada
 
 midb = mysql.connector.connect(
     host='localhost',
@@ -37,15 +42,17 @@ def convertResultOrdIdTostring(resultadoOrgId):
 
 cursor=midb.cursor()
 
-archivo = open("./newfile.txt","r")
+filename = input("Ingrese el nombre del archivo indicado arriba (con extension .txt): ")
+
+archivo = open(filename,"r")
 
 for linea in archivo:
     linea = linea.rstrip("\\n") 
     listResult=re.split(r'\s+', linea) 
     #listResult=re.split(r':', linea)
-    print(listResult)
+    #print(listResult)
     if(listResult[0]=='ESTACION'):
-        print("Num Estacion")
+        #print("Num Estacion")
         
         listaEstaciones.append(listResult[2])
         
@@ -70,23 +77,27 @@ for linea in archivo:
     if(listResult[0]=='ORGANISMO'):
         #print("---organismo-list---")
         sqlOrgId=f"SELECT id_organismo FROM Organismo WHERE nombre_org like '{listResult[2]}'"
+        
         cursor.execute(sqlOrgId)
         resultadoOrgId=cursor.fetchall()
+        
         orgIdStr=convertResultOrdIdTostring(resultadoOrgId)
         listaOrg.append(orgIdStr)
         listaIdorgNum.append(int(orgIdStr))
     # Armar query de Estacion Climatologica
     if(listResult[0]=='MUNICIPIO'):
         sqlListMunNombre = "SELECT nombre_mun FROM Municipio;"
+        
         cursor.execute(sqlListMunNombre)
         resultadoMunNombre=cursor.fetchall()
+        
         numMunicipios = len(resultadoMunNombre)
-        print("------------> numero de municipios: ",numMunicipios)
         for j in range(numMunicipios):
             sqlSelectMunId="SELECT id_municipio FROM Municipio WHERE nombre_mun="+str(resultadoMunNombre[j])+";";
             cleaningx = sqlSelectMunId.replace(",)", "")
             cleaningx2=cleaningx
             cleanedSQL=cleaningx2.replace("(","")
+            
             cursor.execute(cleanedSQL)
             
             resultadoMunId=cursor.fetchall()
@@ -132,6 +143,7 @@ for linea in archivo:
 #print("Municipios: lista----------->",listaMun)
 #print("OrgIds Lista:------>",listaIdorgNum)
 
+print("------------> numero de municipios: ",numMunicipios)
 x=0
 datos_a_insertar = []
 for x in range(numMunicipios):
@@ -146,10 +158,19 @@ with open(nombre_archivo, 'w') as archivoSQL:
         lineaSql=str(tuplastransformadas)
         archivoSQL.write(lineaSql+", \n")
         print(lineaSql)
-    archivoSQL.write(";")
+    archivoSQL.write(";;")
     archivoSQL.close()
 
 consultaInsertEstacionClim = "INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion,situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
+# # Nombre de la tabla a truncar
+# tabla = "Estacion_climatologica"
+
+# # Consulta TRUNCATE TABLE
+# consulta = f"TRUNCATE TABLE {tabla}"
+
+# # Ejecutar la consulta
+# cursor.execute(consulta)
 
 # # Insertar los datos en lotes
 cursor.executemany(consultaInsertEstacionClim, datos_a_insertar)
@@ -157,4 +178,4 @@ cursor.executemany(consultaInsertEstacionClim, datos_a_insertar)
 #midb.commit()
 
 archivo.close()
-
+print("Se creo el archivo: Stations.sql")

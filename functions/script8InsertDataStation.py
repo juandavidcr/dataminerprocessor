@@ -1,6 +1,12 @@
 import mysql.connector
 import re
-from helpers.dateFormater import transform_FechaFormat
+from datetime import datetime
+
+def transform_FechaFormat(fecha_str):
+    #print("transformando fecha")
+    fecha_obj = datetime.strptime(fecha_str, "%d/%m/%Y")
+    fecha_transformada = fecha_obj.strftime("%Y-%m-%d")
+    return fecha_transformada
 
 #nombre_archivo = "./bancdata/atzalan/atzalan.txt"
 midb = mysql.connector.connect(
@@ -12,7 +18,8 @@ midb = mysql.connector.connect(
 )
 cursor=midb.cursor()
 nombre_archivo = "./atzalandata.txt"
-idEstacion=92
+#nombre_archivo = input("Ingrese el nombre del archivo indicado arriba (con extension .txt): ")
+idEstacion=1
 token = "--------------------------------------"
 listaFechaTransformada=[]
 listaDeFechas = []
@@ -62,7 +69,7 @@ listTmin = [0 if elemento == "Nulo" else elemento for elemento in listTmin]
 y=0
 datos_a_insertar=[]
 for y in range(nDatos):
-    datos_a_insertar.append((listaFechaTransformada[y],float(listaPrecipitaciones[y]),float(listaEvaporacion[y]),float(listTmax[y]),float(listTmin[y]),92))
+    datos_a_insertar.append((listaFechaTransformada[y],float(listaPrecipitaciones[y]),float(listaEvaporacion[y]),float(listTmax[y]),float(listTmin[y]),idEstacion))
 
 nuevo_archivo = "Data.sql"
 with open(nuevo_archivo,'w') as archivoSQL:
@@ -78,6 +85,7 @@ with open(nuevo_archivo,'w') as archivoSQL:
 consultaInsertSQLDatoClimatologico="INSERT INTO Datos_Climatologicos (fecha, precipitacion_mm,evaporacion_mm,tmax,tmin,estacion_id) VALUES(%s,%s,%s,%s,%s,%s)"
 
 cursor.executemany(consultaInsertSQLDatoClimatologico, datos_a_insertar)
-#midb.commit()
-
+#Aqui se inserta a la BD
+midb.commit()
 archivo.close()       
+print("Se creo el archivo Data")

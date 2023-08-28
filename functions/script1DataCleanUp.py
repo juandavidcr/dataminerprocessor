@@ -9,26 +9,7 @@ import re
 import itertools
 
 from pexpect import EOF
-#armado de rutas
-# directorio = "./bancdata/"
-# routeF = directorio+"atzalan/atzalan.txt"
-# routeF2 = directorio+"briones/briones.txt"
-# routeF3 = directorio+"chicontepec-suspendida/chicontepec.txt"
-# routeF4 = directorio+"coatepec-suspendida/coatepec.txt"
-# routeF5 = directorio+"cordoba-suspendida/cordoba.txt"
-# routeF6 = directorio+"huatusco-suspendida/huatusco.txt"
-# routeF7 = directorio+"los-tuxtlas/san-andres.txt"
-# routeF8 = directorio+"los-tuxtlas/santiago-tuxtla.txt"
-# routeF9 = directorio+"los-tuxtlas/sihuapan.txt"
-# routeF10 = directorio+"los-tuxtlas/tapalapa.txt"
-# routeF11 = directorio+"misantla/misantla.txt"
-# routeF12 = directorio+"papantla/papantla.txt"
-# routeF13 = directorio+"tezonapa-suspendida/tezonapa-1.txt"
-# routeF14 = directorio+"tezonapa-suspendida/tezonapa-2.txt"
-# routeF15 = directorio+"zongolica-suspendida/zongolica.txt"
 
-#almacenamiento de rutas 
-#listaData = [routeF,routeF2,routeF3,routeF4,routeF5,routeF6,routeF7,routeF8,routeF9,routeF10,routeF11,routeF12,routeF13,routeF14,routeF15]
 #creacion de nombres de cada banco de datos
 sufixFile = ".txt"
 namefile = "data"
@@ -52,16 +33,21 @@ listNamesEstacion = [
 ]
 
 #Funcion encargada de separar las cabeceras de los datos en bruto
-def getInfoData(route):
-    print(route)
+def getInfoData(route,filename):
+    #print(route)
+    if os.path.exists(filename):
+        os.remove(filename)
+        #print(f"El archivo '{filename}' ha sido borrado.")
+    #else:
+        #print(f"El archivo '{filename}' no existe.")
     tam=len(listNamesEstacion)
     x =range(tam)
-    
+    filename+=".txt"
     if os.path.exists(route):
         with open(route, "r") as text_file:
             #nombre de la estación climatologica a cargar
             #print(listNamesEstacion[i])
-            archivoEstacion = open("datafile.txt","a")
+            archivoEstacion = open(filename,"a")
             #archivoEstacion = open(listNamesEstacion[i],"a")
             for line in itertools.islice(text_file, 17,countlines(route)):
                 archivoEstacion.writelines(line)
@@ -69,14 +55,18 @@ def getInfoData(route):
             archivoEstacion.close()
         text_file.close()
     else:
-        print('El archivo no existe')
+        print('El archivo no existe')    
+    return filename
 
-def getInfoDataTable(route):
-    print(route)
+def getInfoDataTable(route,filename2):
+    if os.path.exists(filename2):
+        os.remove(filename2)
+    #print(route)
+    filename2 += ".txt"
     if os.path.exists(route):
         with open(route, "r") as text_file:
             #se obtienen las cabeceras de los datos de todas las estaciones dentro del sistema de archivos por cada ruta existente
-            archivo = open("newfile.txt","a")
+            archivo = open(filename2,"a")
             #de la linea 4 del archivo se identifica un patron de información de las estaciones que ayudara a crear las tablas de municipio, organismo, Estado de la Republica Mexicana y Estación Climatológica.
             for line in itertools.islice(text_file, 4, 17):
                 texto=line
@@ -85,7 +75,7 @@ def getInfoDataTable(route):
             text_file.close()
     else:
         print('El archivo no existe')
-#captura la informacion de cada archivo divdiendo y poniendo el nombre correspondiente de  cada banco de datos
+    return filename2
 
 #funcion auxiliar para conteo de lineas
 def countlines(filein):
