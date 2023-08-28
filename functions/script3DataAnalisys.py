@@ -175,7 +175,7 @@ consultaInsertEstacionClim = "INSERT INTO Estacion_climatologica (num_estacion,n
 # # Insertar los datos en lotes
 cursor.executemany(consultaInsertEstacionClim, datos_a_insertar)
 #La siguiente linea inserta en la bd
-#midb.commit()
+midb.commit()
 
 archivo.close()
 print("Se creo el archivo: Stations.sql")
