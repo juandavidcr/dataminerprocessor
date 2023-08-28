@@ -3,9 +3,7 @@
 #
 import mysql.connector
 import re
-#from datetime import datetime,date
 from helpers.dateFormater import transform_FechaFormat
-#from functions.models import 
 from models.Estaciones import Estaciones
 
 midb = mysql.connector.connect(
@@ -38,9 +36,7 @@ def convertResultOrdIdTostring(resultadoOrgId):
     return resultado1
 
 cursor=midb.cursor()
-#null=None
-#humedadRelativa=None
-#Estado_ID=30
+
 archivo = open("./newfile.txt","r")
 
 for linea in archivo:
@@ -50,16 +46,13 @@ for linea in archivo:
     print(listResult)
     if(listResult[0]=='ESTACION'):
         print("Num Estacion")
-        #contadorMunicipio+=1
+        
         listaEstaciones.append(listResult[2])
-        #encontrar cuantas veces se repite la palabra municipio 
-        #if(contadorMunicipio>1):
-        #    print("______________---->municipio "+listResult[0] +" "+ listResult[2])
+        
 
     if(listResult[0]=='NOMBRE'):
         n=len(listResult)
-        #print("Existe nombre-estacion: tam ---->",n)
-        #print(listResult)
+        
         if(n==4):
            listaNombreEstaciones.append(f"{str(listResult[2])} {str(listResult[3])}")
         if (n==5):
@@ -70,14 +63,10 @@ for linea in archivo:
             listaNombreEstaciones.append(f"{str(listResult[2])} {str(listResult[3])} {str(listResult[4])} {str(listResult[5])} {str(listResult[6])}")
     if(listResult[0] == 'LONGITUD'):
         listaLon.append(str(listResult[2]).replace("�","°"))
-        #for i in range(len(listaLon)):
-        #    listaLon2 = listaLon[i].replace("�","°")
-        #    print("LISTA LONG--->",listaLon2)
+        
     if(listResult[0] == 'LATITUD'):
         listaLat.append(str(listResult[2]).replace("�","°"))
-        #for i in range(len(listaLat)):
-        #    listaLat2=listaLat[i].replace("�","°")
-        #    print("LISTA LAT----->",listaLat2)
+       
     if(listResult[0]=='ORGANISMO'):
         #print("---organismo-list---")
         sqlOrgId=f"SELECT id_organismo FROM Organismo WHERE nombre_org like '{listResult[2]}'"
@@ -133,22 +122,22 @@ for linea in archivo:
 
 #print("---------> cleanedMunId: ",MunicipioIdCleaned)
 #print(" lMunID: --------->",listaMunId)
-print("resultado ---> Municipio Nombre: ",resultadoMunNombre)
-print("Numero de Estacion: ",listaEstaciones)
-print("NOMBRE ESTACION: ",listaNombreEstaciones)
-print("LISTA ALTITUD: ",listaAlt)
-print("SITUACI�N: ",listaSituacion)
-print("lista EMISION--> ",listaEmision2)
+# print("resultado ---> Municipio Nombre: ",resultadoMunNombre)
+# print("Numero de Estacion: ",listaEstaciones)
+# print("NOMBRE ESTACION: ",listaNombreEstaciones)
+# print("LISTA ALTITUD: ",listaAlt)
+# print("SITUACI�N: ",listaSituacion)
+# print("lista EMISION--> ",listaEmision2)
 #print("LISTA ORGANIZAION ID------>",listaOrg)
 #print("Municipios: lista----------->",listaMun)
-print("OrgIds Lista:------>",listaIdorgNum)
+#print("OrgIds Lista:------>",listaIdorgNum)
 
 x=0
 datos_a_insertar = []
 for x in range(numMunicipios):
     datos_a_insertar.append((listaEstaciones[x],listaNombreEstaciones[x],listaSituacion[x],listaMunId[x],listaIdorgNum[x],listaLat[x],listaLon[x],listaAlt[x],listaEmision2[x])) 
 
-
+#ESCRIBE EL ARCHIVO DE COMPROBACION
 nombre_archivo = "Stations.sql"
 with open(nombre_archivo, 'w') as archivoSQL:
     lineaSql = f"INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion,situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES"
@@ -164,6 +153,7 @@ consultaInsertEstacionClim = "INSERT INTO Estacion_climatologica (num_estacion,n
 
 # # Insertar los datos en lotes
 cursor.executemany(consultaInsertEstacionClim, datos_a_insertar)
+#La siguiente linea inserta en la bd
 #midb.commit()
 
 archivo.close()
