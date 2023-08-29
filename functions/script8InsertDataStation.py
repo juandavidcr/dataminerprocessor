@@ -17,9 +17,23 @@ midb = mysql.connector.connect(
     auth_plugin='mysql_native_password'
 )
 cursor=midb.cursor()
-nombre_archivo = "./atzalandata.txt"
-#nombre_archivo = input("Ingrese el nombre del archivo indicado arriba (con extension .txt): ")
-idEstacion=1
+
+def getEstacionId(estacion_nombre):
+    
+    #print("Entro a estacionId")
+    sqlQuery=f"SELECT id_estacion FROM Estacion_climatologica WHERE nombre_estacion LIKE '%{estacion_nombre}%'"
+    cursor.execute(sqlQuery)
+    result=cursor.fetchall()
+    #print(result)
+    return result
+
+ejemplo_nombre_archivo = "./atzalandata.txt"
+print(ejemplo_nombre_archivo)
+estacion_nombre=input("Ingresar un nombre de estacion valido: ")
+nombre_archivo = input("Ingrese el nombre del archivo indicado arriba (con extension .txt): ")
+
+
+idEstacion=input("Ingresa el Id de estacion: ")
 token = "--------------------------------------"
 listaFechaTransformada=[]
 listaDeFechas = []
@@ -48,9 +62,10 @@ with open(nombre_archivo, 'r') as archivo:
                 #print(lineasTexto.split('\s'))
                 if(re.search(patternDeFechas,lineasTexto)):
                     listaDeFechas.append(listResult[0])
-                    strListResult=str(listResult[0])
+                    #strListResult=str(listResult[0])
                     #trabajar con listatransformada
-                    listaFechaTransformada.append(transform_FechaFormat(strListResult))
+                    transformada=str(listResult[0])
+                    listaFechaTransformada.append(transform_FechaFormat(transformada))
                 if(re.search(patternDePrecip,lineasTexto)):
                     listaPrecipitaciones.append(listResult[1])
                 if(re.search(patternDeEvap,lineasTexto)):
@@ -65,11 +80,12 @@ listaEvaporacion=[0 if elemento == "Nulo" else elemento for elemento in listaEva
 listaPrecipitaciones = [0 if elemento == "Nulo" else elemento for elemento in listaPrecipitaciones]
 listTmax = [0 if elemento == "Nulo" else elemento for elemento in listTmax]
 listTmin = [0 if elemento == "Nulo" else elemento for elemento in listTmin]
-
+#idEstacion=getEstacionId(nombre_archivo)
+idEstacionint= int(idEstacion)
 y=0
 datos_a_insertar=[]
 for y in range(nDatos):
-    datos_a_insertar.append((listaFechaTransformada[y],float(listaPrecipitaciones[y]),float(listaEvaporacion[y]),float(listTmax[y]),float(listTmin[y]),idEstacion))
+    datos_a_insertar.append((listaFechaTransformada[y],float(listaPrecipitaciones[y]),float(listaEvaporacion[y]),float(listTmax[y]),float(listTmin[y]),idEstacionint))
 
 nuevo_archivo = "Data.sql"
 with open(nuevo_archivo,'w') as archivoSQL:
@@ -86,6 +102,6 @@ consultaInsertSQLDatoClimatologico="INSERT INTO Datos_Climatologicos (fecha, pre
 
 cursor.executemany(consultaInsertSQLDatoClimatologico, datos_a_insertar)
 #Aqui se inserta a la BD
-midb.commit()
+#midb.commit()
 archivo.close()       
 print("Se creo el archivo Data")
