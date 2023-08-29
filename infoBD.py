@@ -80,15 +80,15 @@ CREATE TABLE Estacion_climatologica (
 );
 
 CREATE TABLE Datos_Climatologicos(
-    # id_climatologicos int(10) NOT NULL AUTO_INCREMENT,
-    # fecha DATE,
-    # precipitacion_mm FLOAT(5,1),
-    # evaporacion_mm FLOAT(5,1),
-    # tmax FLOAT(3,1),
-    # tmin FLOAT(3,1),
-    # humedad_relativa FLOAT(4,2),
-    # estacion_id int(20),
-    # PRIMARY KEY (id_climatologicos),
-    # FOREIGN KEY (estacion_id) REFERENCES Estacion_climatologica(id_estacion)
+     id_climatologicos int(10) NOT NULL AUTO_INCREMENT,
+     fecha DATE,
+     precipitacion_mm FLOAT(5,1),
+     evaporacion_mm FLOAT(5,1),
+     tmax FLOAT(3,1),
+     tmin FLOAT(3,1),
+     humedad_relativa FLOAT(4,2),
+     estacion_id int(20),
+     PRIMARY KEY (id_climatologicos),
+     FOREIGN KEY (estacion_id) REFERENCES Estacion_climatologica(id_estacion)
  );   
  """)

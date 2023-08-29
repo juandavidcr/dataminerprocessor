@@ -21,18 +21,21 @@ cursor=midb.cursor()
 def getEstacionId(estacion_nombre):
     
     #print("Entro a estacionId")
-    sqlQuery=f"SELECT id_estacion FROM Estacion_climatologica WHERE nombre_estacion LIKE '%{estacion_nombre}%'"
+    sqlQuery=f"SELECT id_estacion,num_estacion,nombre_estacion FROM Estacion_climatologica WHERE nombre_estacion LIKE '%{estacion_nombre}%'"
     cursor.execute(sqlQuery)
     result=cursor.fetchall()
     #print(result)
-    return result
+    for fila in result:
+        print(fila)
+    
 
 ejemplo_nombre_archivo = "./atzalandata.txt"
 print("Ejemplo: ",ejemplo_nombre_archivo)
 estacion_nombre=input("Ingresar un nombre de estacion valido: ")
-nombre_archivo = input("Ingrese el nombre del archivo indicado arriba (con extension .txt): ")
+nombre_archivo = input("Ingrese el nombre del archivo como en el ejemplo indicado arriba (con extension .txt): ")
 
-
+# Poder dar al usuario la opcion de ver los id de Estacion
+getEstacionId(estacion_nombre)
 idEstacion=input("Ingresa el Id de estacion: ")
 token = "--------------------------------------"
 listaFechaTransformada=[]
@@ -102,6 +105,6 @@ consultaInsertSQLDatoClimatologico="INSERT INTO Datos_Climatologicos (fecha, pre
 
 cursor.executemany(consultaInsertSQLDatoClimatologico, datos_a_insertar)
 #Aqui se inserta a la BD
-#midb.commit()
+midb.commit()
 archivo.close()       
-print("Se creo el archivo Data")
+print("Se creo el archivo Data.sql")
