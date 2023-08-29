@@ -28,7 +28,7 @@ def getEstacionId(estacion_nombre):
     return result
 
 ejemplo_nombre_archivo = "./atzalandata.txt"
-print(ejemplo_nombre_archivo)
+print("Ejemplo: ",ejemplo_nombre_archivo)
 estacion_nombre=input("Ingresar un nombre de estacion valido: ")
 nombre_archivo = input("Ingrese el nombre del archivo indicado arriba (con extension .txt): ")
 
