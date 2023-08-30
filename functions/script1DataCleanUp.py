@@ -37,9 +37,7 @@ def getInfoData(route,filename):
     #print(route)
     if os.path.exists(filename):
         os.remove(filename)
-        #print(f"El archivo '{filename}' ha sido borrado.")
-    #else:
-        #print(f"El archivo '{filename}' no existe.")
+
     tam=len(listNamesEstacion)
     x =range(tam)
     filename+=".txt"
@@ -47,7 +45,8 @@ def getInfoData(route,filename):
         with open(route, "r") as text_file:
             #nombre de la estación climatologica a cargar
             #print(listNamesEstacion[i])
-            archivoEstacion = open(filename,"a")
+            ubicacion="./target/"
+            archivoEstacion = open(ubicacion+filename,"a")
             #archivoEstacion = open(listNamesEstacion[i],"a")
             for line in itertools.islice(text_file, 17,countlines(route)):
                 archivoEstacion.writelines(line)
@@ -62,11 +61,13 @@ def getInfoDataTable(route,filename2):
     if os.path.exists(filename2):
         os.remove(filename2)
     #print(route)
+    
     filename2 += ".txt"
     if os.path.exists(route):
         with open(route, "r") as text_file:
+            ubicacion="./target/"
             #se obtienen las cabeceras de los datos de todas las estaciones dentro del sistema de archivos por cada ruta existente
-            archivo = open(filename2,"a")
+            archivo = open(ubicacion+filename2,"a")
             #de la linea 4 del archivo se identifica un patron de información de las estaciones que ayudara a crear las tablas de municipio, organismo, Estado de la Republica Mexicana y Estación Climatológica.
             for line in itertools.islice(text_file, 4, 17):
                 texto=line
@@ -114,7 +115,4 @@ def printlineas(route):
     print(datos) 
      
 
-# #Genera elarchivo de los encabezados y el archivo de los datos de cada estación por nombre dejandole un sufijo de la siguiente manera 'nombredelarchivo'+'data'+.txt y newfile.txt contendra las cabeceras de las estaciones para saber el numero de estaciones.
-# for x in listaData:
-#     #getInfoDataTable(x)
-#     getInfoData(x)
+

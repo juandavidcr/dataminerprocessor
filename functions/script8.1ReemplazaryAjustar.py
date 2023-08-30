@@ -17,3 +17,4 @@ nombre_archivo = "Data.sql"
 
 # Llamada a la función
 reemplazar_caracter_ultimo_linea_anterior(nombre_archivo)
+print("Revisa tu nuevo archivo Data.sql si deseas insetar de manera manual. Fin ")

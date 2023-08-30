@@ -5,6 +5,7 @@ from functions.script1DataCleanUp import getInfoDataTable,getInfoData
 
 from pexpect import EOF
 
+print("Oprime Ctrl + C para salir en cualquier momento.")
 print("----------------------------------------------------------------------------")
 print(f"Bienvenido al programa * UAM springerDataClimateMX *")
 print("----------------------------------------------------------------------------")
@@ -29,7 +30,7 @@ routeF13 = directorio+"tezonapa/tezonapa-1.txt"
 routeF14 = directorio+"tezonapa/tezonapa-2.txt"
 routeF15 = directorio+"zongolica/zongolica.txt"
 
-print("3.- Produciremos 2 archivos que contienen ciertos patrones de comportamiento y localización dentro de las fuentes tomadas de un kmz de la aplicacion de google earth del siguiente link: https://smn.conagua.gob.mx/tools/RESOURCES/estacion/EstacionesClimatologicas.kmz  \n El primer archivo nombrado extrae las cabeceras de cada archivo proporcionado en la carpeta del banco de datos y deposita los valores en un nuevo formato de información relevante.\n El segundo archivo contendra los datos de cada estacion ingresados de manera ordenada ")
+print("4.- Produciremos 2 archivos que contienen ciertos patrones de comportamiento y localización dentro de las fuentes tomadas de un kmz de la aplicacion de google earth del siguiente link: https://smn.conagua.gob.mx/tools/RESOURCES/estacion/EstacionesClimatologicas.kmz  \n El primer archivo nombrado extrae las cabeceras de cada archivo proporcionado en la carpeta del banco de datos y deposita los valores en un nuevo formato de información relevante.\n El segundo archivo contendra los datos de cada estacion ingresados de manera ordenada ")
 
 nombre_archivo = input("Ingrese el nombre del archivo a producir (sin extension *.txt): ")
 nombre_datos_archivo= input("Ingrese el nombre del archivo de sus datos para MODELO CONAGUA (sin extension *.txt): ")
@@ -39,15 +40,16 @@ listaData = [routeF,routeF2,routeF3,routeF4,routeF5,routeF6,routeF7,routeF8,rout
 n=len(listaData)
 listaOpciones=[]
 for archivos in listaData:
+    print("*",archivos)
     archivo1=getInfoDataTable(archivos,nombre_archivo)
     archivo2=getInfoData(archivos,nombre_datos_archivo)
 listaOpciones.append(archivo1)
 listaOpciones.append(archivo2)
-print(f"*|--------------------------------------------------------------------------|*")
-print(f"*| Se ingresan: {n} archivos                                                ")
+print(f"\n*|--------------------------------------------------------------------------|*")
+print(f"*| Se ingresan: {n} en la carpeta ./target/* archivos                                                ")
 print(f"*| Se generaron los siguientes archivos: {archivo1}, {archivo2}    ")
 print(f"*|--------------------------------------------------------------------------|*")
-print(f"\nOpcion 1:Procesar el archivo: {listaOpciones[0]} \nEl cual Inserta datos de Estaciones climatologicas en la base de datos:climatologia_diaria.\nOpcion 2: Procesar tus datos correspondiente al archivo {listaOpciones[1]} con el municipio id ingresado por usuario.\n")
+print(f"\nOpcion 1:Procesar el archivo: {listaOpciones[0]} \nEl cual Inserta datos de Estaciones climatologicas en la base de datos:climatologia_diaria.\n Si YA cuentas con tus estaciones climatológicas cargadas no es necesario oprimir el '1'.\n  \nOpcion 2: Procesar tus datos correspondiente al archivo {listaOpciones[1]} con el municipio id ingresado por usuario.\n")
 opcion = input("Elige una opción (1 o 2): ")
 if opcion == "1":
     print(f"Has elegido la opción 1.\n Se leera el archivo {listaOpciones[0]} y finalizará el proceso ")
@@ -59,6 +61,7 @@ if opcion == "1":
 
 elif opcion == "2":
     print(f"Has elegido la opción 2.\n Se leera el archivo {listaOpciones[1]} y finalizará el proceso ")
+
     with open("./functions/script8InsertDataStation.py", 'r') as archivopy:
         contenido_script = archivopy.read()
         # Ejecutar el contenido del script
