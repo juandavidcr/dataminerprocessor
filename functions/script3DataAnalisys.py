@@ -3,10 +3,13 @@
 #
 import mysql.connector
 import re
-#from datetime import datetime,date
-from helpers.dateFormater import transform_FechaFormat
-#from functions.models import 
-from models.Estaciones import Estaciones
+from datetime import datetime
+
+def transform_FechaFormat(fecha_str):
+    #print("transformando fecha")
+    fecha_obj = datetime.strptime(fecha_str, "%d/%m/%Y")
+    fecha_transformada = fecha_obj.strftime("%Y-%m-%d")
+    return fecha_transformada
 
 midb = mysql.connector.connect(
     host='localhost',
@@ -38,29 +41,25 @@ def convertResultOrdIdTostring(resultadoOrgId):
     return resultado1
 
 cursor=midb.cursor()
-#null=None
-#humedadRelativa=None
-#Estado_ID=30
-archivo = open("./1_newfile.txt","r")
-contadorMunicipio = 0
+
+filename = input("Ingrese el nombre del archivo indicado arriba (con extension .txt): ")
+
+archivo = open(filename,"r")
 
 for linea in archivo:
     linea = linea.rstrip("\\n") 
     listResult=re.split(r'\s+', linea) 
     #listResult=re.split(r':', linea)
-    print(listResult)
+    #print(listResult)
     if(listResult[0]=='ESTACION'):
-        print("Num Estacion")
-        #contadorMunicipio+=1
+        #print("Num Estacion")
+        
         listaEstaciones.append(listResult[2])
-        #encontrar cuantas veces se repite la palabra municipio 
-        #if(contadorMunicipio>1):
-        #    print("______________---->municipio "+listResult[0] +" "+ listResult[2])
+        
 
     if(listResult[0]=='NOMBRE'):
         n=len(listResult)
-        #print("Existe nombre-estacion: tam ---->",n)
-        #print(listResult)
+        
         if(n==4):
            listaNombreEstaciones.append(f"{str(listResult[2])} {str(listResult[3])}")
         if (n==5):
@@ -71,34 +70,34 @@ for linea in archivo:
             listaNombreEstaciones.append(f"{str(listResult[2])} {str(listResult[3])} {str(listResult[4])} {str(listResult[5])} {str(listResult[6])}")
     if(listResult[0] == 'LONGITUD'):
         listaLon.append(str(listResult[2]).replace("�","°"))
-        #for i in range(len(listaLon)):
-        #    listaLon2 = listaLon[i].replace("�","°")
-        #    print("LISTA LONG--->",listaLon2)
+        
     if(listResult[0] == 'LATITUD'):
         listaLat.append(str(listResult[2]).replace("�","°"))
-        #for i in range(len(listaLat)):
-        #    listaLat2=listaLat[i].replace("�","°")
-        #    print("LISTA LAT----->",listaLat2)
+       
     if(listResult[0]=='ORGANISMO'):
         #print("---organismo-list---")
         sqlOrgId=f"SELECT id_organismo FROM Organismo WHERE nombre_org like '{listResult[2]}'"
+        
         cursor.execute(sqlOrgId)
         resultadoOrgId=cursor.fetchall()
+        
         orgIdStr=convertResultOrdIdTostring(resultadoOrgId)
         listaOrg.append(orgIdStr)
         listaIdorgNum.append(int(orgIdStr))
     # Armar query de Estacion Climatologica
     if(listResult[0]=='MUNICIPIO'):
         sqlListMunNombre = "SELECT nombre_mun FROM Municipio;"
+        
         cursor.execute(sqlListMunNombre)
         resultadoMunNombre=cursor.fetchall()
+        
         numMunicipios = len(resultadoMunNombre)
-        print("------------> numero de municipios: ",numMunicipios)
         for j in range(numMunicipios):
             sqlSelectMunId="SELECT id_municipio FROM Municipio WHERE nombre_mun="+str(resultadoMunNombre[j])+";";
             cleaningx = sqlSelectMunId.replace(",)", "")
             cleaningx2=cleaningx
             cleanedSQL=cleaningx2.replace("(","")
+            
             cursor.execute(cleanedSQL)
             
             resultadoMunId=cursor.fetchall()
@@ -132,57 +131,51 @@ for linea in archivo:
 #print(listaLat2,listaLon2)
 #print(listaIdorgNum,listaMunId)
 
-print("---------> cleanedMunId: ",MunicipioIdCleaned)
+#print("---------> cleanedMunId: ",MunicipioIdCleaned)
 #print(" lMunID: --------->",listaMunId)
-print("resultado ---> Municipio Nombre: ",resultadoMunNombre)
-print("Numero de Estacion: ",listaEstaciones)
-print("NOMBRE ESTACION: ",listaNombreEstaciones)
-print("LISTA ALTITUD: ",listaAlt)
-print("SITUACI�N: ",listaSituacion)
-print("lista EMISION--> ",listaEmision2)
+# print("resultado ---> Municipio Nombre: ",resultadoMunNombre)
+# print("Numero de Estacion: ",listaEstaciones)
+# print("NOMBRE ESTACION: ",listaNombreEstaciones)
+# print("LISTA ALTITUD: ",listaAlt)
+# print("SITUACI�N: ",listaSituacion)
+# print("lista EMISION--> ",listaEmision2)
 #print("LISTA ORGANIZAION ID------>",listaOrg)
 #print("Municipios: lista----------->",listaMun)
-print("OrgIds Lista:------>",listaIdorgNum)
+#print("OrgIds Lista:------>",listaIdorgNum)
 
+print("------------> numero de municipios: ",numMunicipios)
 x=0
 datos_a_insertar = []
-for x in range(15):
+for x in range(numMunicipios):
     datos_a_insertar.append((listaEstaciones[x],listaNombreEstaciones[x],listaSituacion[x],listaMunId[x],listaIdorgNum[x],listaLat[x],listaLon[x],listaAlt[x],listaEmision2[x])) 
-        
-for linea in datos_a_insertar:
+
+#ESCRIBE EL ARCHIVO DE COMPROBACION
+nombre_archivo = "Stations.sql"
+with open(nombre_archivo, 'w') as archivoSQL:
     lineaSql = f"INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion,situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES"
-    lineaSql+=f"({listaEstaciones[x]},{listaNombreEstaciones[x]},{listaSituacion[x]},{listaMunId[x]},{listaIdorgNum[x]},{listaLat[x]},{listaLon[x]},{listaAlt[x]},{listaEmision2[x]}),)"
-    nombre_archivo = "Stations.sql"
-    with open(nombre_archivo, 'w') as archivo:
-        archivo.write(lineaSql)
-#fileToSql = open("Stations.sql",'w')
-
-
-
-
-
-for tuplastransformadas in datos_a_insertar:
-    print(tuplastransformadas)
-#datos_a_insertar=[
-    # ("valor1", "valor2"),
-    # ("valor3", "valor4"),
-    # # Agrega más tuplas según sea necesario
-# ]
-
-#datos_a_insertar.append()
-# Consulta de inserción con placeholders
-#INSERT INTO climatologia_diaria.Estacion_climatologica (num_estacion, nombre_estacion, situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES ('1', 'a', 'a', '1', '1', '123', '-123', '123', '2023-08-24');
+    archivoSQL.write(lineaSql)
+    for tuplastransformadas in datos_a_insertar:
+        lineaSql=str(tuplastransformadas)
+        archivoSQL.write(lineaSql+", \n")
+        print(lineaSql)
+    archivoSQL.write(";;")
+    archivoSQL.close()
 
 consultaInsertEstacionClim = "INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion,situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
+# # Nombre de la tabla a truncar
+# tabla = "Estacion_climatologica"
+
+# # Consulta TRUNCATE TABLE
+# consulta = f"TRUNCATE TABLE {tabla}"
+
+# # Ejecutar la consulta
+# cursor.execute(consulta)
+
 # # Insertar los datos en lotes
 cursor.executemany(consultaInsertEstacionClim, datos_a_insertar)
+#La siguiente linea inserta en la bd
 midb.commit()
-# #
-#lineaNuevaSQL=f"""INSERT INTO Estacion_climatologica VALUES 
-#(1,'30012','ATZALAN','OPERANDO',1,1,'019.789','-097.246','1,697 msnm','2020-04-06'),
-#(2,'30452','COATEPEC','OPERANDO',2,2,'019.508','-096.949','1,349 msnm','2020-04-06');
-#"""
 
 archivo.close()
-
+print("Se creo el archivo: Stations.sql")

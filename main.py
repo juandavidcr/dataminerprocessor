@@ -1,31 +1,18 @@
-import mysql.connector
-from functions.script1DataCleanUp import getInfoDataTable,getInfoData,printlineas
+#!/usr/bin/env python
+# decoding: utf-8
+# Script que separa la información de los txt
+from functions.script1DataCleanUp import getInfoDataTable,getInfoData
+
 from pexpect import EOF
 
-#Dividir datos por cada estacion metereologica
+print("Oprime Ctrl + C para salir en cualquier momento.")
+print("----------------------------------------------------------------------------")
+print(f"Bienvenido al programa * UAM springerDataClimateMX *")
+print("----------------------------------------------------------------------------")
+print(f'Instrucciones: 1.- Cargar archivos de estaciones climatologicas dentro de la carpeta bancdata.\n Por cada carpeta de municipio nombrada poner adentro los archivos de las estaciones pertinentes. Previamente se realizó un análisis de los Organismos que controlan las estaciones climatológicas y se diseño una base de datos para recibir dichos datos con la ayuda de este software.')
+print(f'2.- Crear la base de datos a partir del archivo bd/sql-queries/db.sql \n')
+print(f'3.- Crear catalogos de Organismo,Municipio y Estados_Republica_Mex a partir del archivo bd/sql-queries/dumps/<fecha>.sql, se deben buscar las tablas en el dump. \n')
 
-#Obtener los organismos, municipios y estados para llenar catalogos
-
-#Obtener todas las estaciones metereologicas
-# midb = mysql.connector.connect(
-#     host='localhost',
-#     user='root',
-#     password='psytranc3',
-#     database='climatologia_diaria',
-#     auth_plugin='mysql_native_password'
-# )
-
-archivo = open("./bancdata/atzalan/atzalan.txt","r")
-
-#sql = 'INSERT INTO Estacion_climatologica (num_estacion,nombre_estacion, situacion, municipio_id, organismo_id, latitud, longitud, altitud_msnm, emision_fecha) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)'
-#valuesMet = (30012,'ATZALAN','OPERANDO',1,1,'019.789','-097.246','1,697 msnm',date(2020,4,6))
-#valuesMet = (30452,'COATEPEC','OPERANDO',2,2,'019.508','-096.949','1,349 msnm',date(2020,4,6))
-#cursor=midb.cursor()
-#cursor.execute(sql, valuesMet)
-#almacenamiento de rutas 
-
-
-#armado de rutas
 directorio = "./bancdata/"
 routeF = directorio+"atzalan/atzalan.txt"
 routeF2 = directorio+"briones/briones.txt"
@@ -43,13 +30,42 @@ routeF13 = directorio+"tezonapa/tezonapa-1.txt"
 routeF14 = directorio+"tezonapa/tezonapa-2.txt"
 routeF15 = directorio+"zongolica/zongolica.txt"
 
+print("4.- Produciremos 2 archivos que contienen ciertos patrones de comportamiento y localización dentro de las fuentes tomadas de un kmz de la aplicacion de google earth del siguiente link: https://smn.conagua.gob.mx/tools/RESOURCES/estacion/EstacionesClimatologicas.kmz  \n El primer archivo nombrado extrae las cabeceras de cada archivo proporcionado en la carpeta del banco de datos y deposita los valores en un nuevo formato de información relevante.\n El segundo archivo contendra los datos de cada estacion ingresados de manera ordenada ")
+
+nombre_archivo = input("Ingrese el nombre del archivo a producir (sin extension *.txt): ")
+nombre_datos_archivo= input("Ingrese el nombre del archivo de sus datos para MODELO CONAGUA (sin extension *.txt): ")
+
 #almacenamiento de rutas 
 listaData = [routeF,routeF2,routeF3,routeF4,routeF5,routeF6,routeF7,routeF8,routeF9,routeF10,routeF11,routeF12,routeF13,routeF14,routeF15]
+n=len(listaData)
+listaOpciones=[]
+for archivos in listaData:
+    print("*",archivos)
+    archivo1=getInfoDataTable(archivos,nombre_archivo)
+    archivo2=getInfoData(archivos,nombre_datos_archivo)
+listaOpciones.append(archivo1)
+listaOpciones.append(archivo2)
+print(f"\n*|--------------------------------------------------------------------------|*")
+print(f"*| Se ingresan: {n} en la carpeta ./target/* archivos                                                ")
+print(f"*| Se generaron los siguientes archivos: {archivo1}, {archivo2}    ")
+print(f"*|--------------------------------------------------------------------------|*")
+print(f"\nOpcion 1:Procesar el archivo: {listaOpciones[0]} \nEl cual Inserta datos de Estaciones climatologicas en la base de datos:climatologia_diaria.\n Si YA cuentas con tus estaciones climatológicas cargadas no es necesario oprimir el '1'.\n  \nOpcion 2: Procesar tus datos correspondiente al archivo {listaOpciones[1]} con el municipio id ingresado por usuario.\n")
+opcion = input("Elige una opción (1 o 2): ")
+if opcion == "1":
+    print(f"Has elegido la opción 1.\n Se leera el archivo {listaOpciones[0]} y finalizará el proceso ")
+    # print(type(listaOpciones[0]))
+    with open("./functions/script3DataAnalisys.py", 'r') as archivopy:
+        contenido_script = archivopy.read()
+        # Ejecutar el contenido del script
+        exec(contenido_script)
 
-#printlineas(listaData[0])
-#getInfoDataTable(listaData[0])
-#getInfoData(listaData[0])
+elif opcion == "2":
+    print(f"Has elegido la opción 2.\n Se leera el archivo {listaOpciones[1]} y finalizará el proceso ")
 
-for x in listaData:
-    getInfoDataTable(x)
-    getInfoData(x)
+    with open("./functions/script8InsertDataStation.py", 'r') as archivopy:
+        contenido_script = archivopy.read()
+        # Ejecutar el contenido del script
+        exec(contenido_script)
+    # Aquí puedes colocar el código para el flujo de la opción 2
+else:
+    print("Opción no válida. Debes elegir entre 1 y 2. Fin")
